@@ -14,8 +14,8 @@ use httpmock::MockServer;
 use polymarket_client_sdk::POLYGON;
 use polymarket_client_sdk::clob::types::SignatureType;
 use polymarket_client_sdk::clob::{Client, Config};
+use polymarket_client_sdk::types::Decimal;
 use reqwest::StatusCode;
-use rust_decimal::Decimal;
 use rust_decimal_macros::dec;
 use serde_json::json;
 use uuid::Uuid;
@@ -1232,7 +1232,7 @@ mod unauthenticated {
 }
 
 mod authenticated {
-    use alloy::primitives::{Address, Signature, address};
+    use alloy::primitives::Signature;
     use alloy::signers::Signer as _;
     use alloy::signers::local::LocalSigner;
     use chrono::NaiveDate;
@@ -1252,6 +1252,7 @@ mod authenticated {
         AssetType, OrderStatusType, OrderType, Side, SignableOrder, SignedOrder, TickSize,
         TraderSide,
     };
+    use polymarket_client_sdk::types::{Address, address};
 
     use super::*;
     use crate::common::{
