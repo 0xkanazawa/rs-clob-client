@@ -625,7 +625,9 @@ impl<P: Provider + Clone> Client<P> {
         // Safe expects v = 27 or 28 for standard ECDSA signatures.
         // Alloy's signature uses y-parity (0 or 1), so we add 27 to normalize.
         let mut sig_bytes = signature.as_bytes().to_vec();
-        sig_bytes[64] = sig_bytes[64].wrapping_add(27);
+        if sig_bytes[64] < 2 {
+            sig_bytes[64] = sig_bytes[64].wrapping_add(27);
+        }
 
         // Execute via Safe's execTransaction
         let pending_tx = safe
