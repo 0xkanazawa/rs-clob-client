@@ -123,15 +123,11 @@ impl<S: Signer, K: Kind> AuthenticationBuilder<'_, S, K> {
 
     /// Attempt to elevate the inner `client` to [`Client<Authenticated<K>>`] using the optional
     /// fields supplied in the builder.
-    #[expect(
-        clippy::missing_panics_doc,
-        reason = "chain_id panic is guarded by prior validation"
-    )]
     pub async fn authenticate(self) -> Result<Client<Authenticated<K>>> {
         let inner = Arc::into_inner(self.client.inner).ok_or(Synchronization)?;
 
-        match self.signer.chain_id() {
-            Some(chain) if chain == POLYGON || chain == AMOY => {}
+        let chain_id = match self.signer.chain_id() {
+            Some(chain) if chain == POLYGON || chain == AMOY => chain,
             Some(chain) => {
                 return Err(Error::validation(format!(
                     "Only Polygon and AMOY are supported, got {chain}"
@@ -142,10 +138,7 @@ impl<S: Signer, K: Kind> AuthenticationBuilder<'_, S, K> {
                     "Chain id not set, be sure to provide one on the signer",
                 ));
             }
-        }
-
-        // SAFETY: chain_id is validated above to be either POLYGON or AMOY
-        let chain_id = self.signer.chain_id().expect("validated above");
+        };
 
         // Auto-derive funder from signer using CREATE2 when using proxy signature types
         // without explicit funder. This computes the deterministic wallet address that
@@ -365,7 +358,7 @@ impl Default for Client<Unauthenticated> {
 }
 
 /// Configuration for [`Client`]
-#[derive(Clone, Debug, Default, Builder)]
+#[derive(Clone, Debug, Builder)]
 pub struct Config {
     /// Whether the [`Client`] will use the server time provided by Polymarket when creating auth
     /// headers. This adds another round trip to the requests.
@@ -379,6 +372,17 @@ pub struct Config {
     #[builder(default = Duration::from_secs(5))]
     /// How often the [`Client`] will automatically submit heartbeats. The default is five (5) seconds.
     heartbeat_interval: Duration,
+}
+
+impl Default for Config {
+    fn default() -> Self {
+        Self {
+            use_server_time: false,
+            geoblock_host: None,
+            #[cfg(feature = "heartbeats")]
+            heartbeat_interval: Duration::from_secs(5),
+        }
+    }
 }
 
 /// The default geoblock API host (separate from CLOB host)
@@ -691,14 +695,14 @@ impl<S: State> Client<S> {
         crate::request(&self.inner.client, request, None).await
     }
 
-    /// Retrieves historical price data for a market.
+    /// Retrieves historical price data for a market outcome token.
     ///
     /// Returns time-series price data over a specified time range or interval.
     /// The `fidelity` parameter controls the granularity of data points returned.
     ///
     /// # Errors
     ///
-    /// Returns an error if the request fails or the market ID is invalid.
+    /// Returns an error if the request fails or the token ID is invalid.
     pub async fn price_history(
         &self,
         request: &PriceHistoryRequest,
