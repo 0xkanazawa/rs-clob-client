@@ -6,12 +6,12 @@
 use bon::Builder;
 use chrono::{DateTime, NaiveDate, Utc};
 use serde::{Deserialize, Serialize};
-use serde_with::NoneAsEmptyString;
 use serde_with::json::JsonString;
-use serde_with::{DisplayFromStr, StringWithSeparator, formats::CommaSeparator, serde_as};
+use serde_with::NoneAsEmptyString;
+use serde_with::{formats::CommaSeparator, serde_as, DisplayFromStr, StringWithSeparator};
 
 use crate::serde_helpers::StringFromAny;
-use crate::types::{Address, B256, Decimal, U256};
+use crate::types::{Address, Decimal, B256, U256};
 
 /// Image optimization metadata.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Builder)]
@@ -334,6 +334,7 @@ pub struct Event {
     pub cumulative_markets: Option<bool>,
     pub away_team_name: Option<String>,
     pub home_team_name: Option<String>,
+    pub event_metadata: Option<serde_json::Value>,
 }
 
 /// A prediction market.
@@ -498,6 +499,7 @@ pub struct Market {
     pub pager_duty_notification_enabled: Option<bool>,
     pub approved: Option<bool>,
     pub cyom: Option<bool>,
+    pub fee_type: Option<String>,
     pub fees_enabled: Option<bool>,
     pub holding_rewards_enabled: Option<bool>,
     pub neg_risk: Option<bool>,
