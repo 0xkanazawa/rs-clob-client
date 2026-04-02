@@ -5,10 +5,10 @@
 use bon::Builder;
 use chrono::{DateTime, NaiveDate, Utc};
 use serde::{Deserialize, Deserializer, Serialize};
-use serde_with::{DefaultOnNull, DisplayFromStr, NoneAsEmptyString, serde_as};
+use serde_with::{serde_as, DefaultOnNull, DisplayFromStr, NoneAsEmptyString};
 
 use super::{ActivityType, Side};
-use crate::types::{Address, B256, Decimal, U256};
+use crate::types::{Address, Decimal, B256, U256};
 
 /// Deserializes an optional Side, treating empty strings as None.
 fn deserialize_optional_side<'de, D>(deserializer: D) -> Result<Option<Side>, D::Error>
@@ -183,6 +183,7 @@ pub struct Trade {
     /// Trade side (BUY or SELL).
     pub side: Side,
     /// The outcome token asset identifier (decimal string from API).
+    #[serde_as(as = "DisplayFromStr")]
     pub asset: U256,
     /// The market condition ID (unique market identifier).
     pub condition_id: B256,
