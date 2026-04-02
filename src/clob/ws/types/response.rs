@@ -101,7 +101,7 @@ pub struct OrderBookLevel {
 /// The server sends either a single price change or a batch. This struct captures both shapes.
 #[non_exhaustive]
 #[serde_as]
-#[derive(Debug, Clone, Serialize, Deserialize, Builder)]
+#[derive(Debug, Clone, Deserialize, Builder)]
 pub struct PriceChange {
     /// Market condition ID
     pub market: B256,
