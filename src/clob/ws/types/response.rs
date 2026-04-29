@@ -101,7 +101,7 @@ pub struct OrderBookLevel {
 /// The server sends either a single price change or a batch. This struct captures both shapes.
 #[non_exhaustive]
 #[serde_as]
-#[derive(Debug, Clone, Deserialize, Builder)]
+#[derive(Debug, Clone, Serialize, Deserialize, Builder)]
 pub struct PriceChange {
     /// Market condition ID
     pub market: B256,
@@ -112,7 +112,7 @@ pub struct PriceChange {
 }
 
 #[non_exhaustive]
-#[derive(Debug, Clone, Deserialize, Builder)]
+#[derive(Debug, Clone, Serialize, Deserialize, Builder)]
 pub struct PriceChangeBatchEntry {
     /// Asset/token identifier
     pub asset_id: U256,
@@ -137,7 +137,7 @@ pub struct PriceChangeBatchEntry {
 /// Tick size change event (triggered when price crosses thresholds).
 #[non_exhaustive]
 #[serde_as]
-#[derive(Debug, Clone, Deserialize, Builder)]
+#[derive(Debug, Clone, Serialize, Deserialize, Builder)]
 pub struct TickSizeChange {
     /// Asset/token identifier
     pub asset_id: U256,
