@@ -283,7 +283,7 @@ pub struct EventMessage {
 
 /// Maker order details within a trade message.
 #[non_exhaustive]
-#[derive(Debug, Clone, Deserialize, Builder)]
+#[derive(Debug, Clone, Serialize, Deserialize, Builder)]
 pub struct MakerOrder {
     /// Asset/token identifier of the maker order
     pub asset_id: U256,
@@ -300,7 +300,7 @@ pub struct MakerOrder {
 }
 
 #[non_exhaustive]
-#[derive(Debug, Clone, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub enum TradeMessageType {
     #[serde(alias = "trade", alias = "TRADE")]
     Trade,
@@ -309,7 +309,7 @@ pub enum TradeMessageType {
 }
 
 #[non_exhaustive]
-#[derive(Debug, Clone, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub enum TradeMessageStatus {
     #[serde(alias = "matched", alias = "MATCHED")]
     Matched,
@@ -328,7 +328,7 @@ pub enum TradeMessageStatus {
 /// User trade execution message (authenticated channel only).
 #[non_exhaustive]
 #[serde_as]
-#[derive(Debug, Clone, Deserialize, Builder)]
+#[derive(Debug, Clone, Serialize, Deserialize, Builder)]
 pub struct TradeMessage {
     /// Trade identifier
     pub id: String,
@@ -387,7 +387,7 @@ pub struct TradeMessage {
 }
 
 #[non_exhaustive]
-#[derive(Debug, Clone, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub enum OrderMessageType {
     #[serde(alias = "placement", alias = "PLACEMENT")]
     Placement,
@@ -402,7 +402,7 @@ pub enum OrderMessageType {
 /// User order update message (authenticated channel only).
 #[non_exhaustive]
 #[serde_as]
-#[derive(Debug, Clone, Deserialize, Builder)]
+#[derive(Debug, Clone, Serialize, Deserialize, Builder)]
 pub struct OrderMessage {
     /// Order identifier
     pub id: String,
